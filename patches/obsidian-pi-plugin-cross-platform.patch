@@ -1,0 +1,21 @@
+diff --git a/src/rpc.ts b/src/rpc.ts
+index 9807600..d940966 100644
+--- a/src/rpc.ts
++++ b/src/rpc.ts
+@@ -40,4 +40,5 @@ export class PiConnection {
+             cwd: this.cwd,
+             stdio: ["pipe", "pipe", "pipe"],
+             env: { ...process.env },
++            shell: process.platform === "win32",
+         });
+diff --git a/src/settings.ts b/src/settings.ts
+index e34160a..a053409 100644
+--- a/src/settings.ts
++++ b/src/settings.ts
+@@ -14,5 +14,5 @@ export interface PiPluginSettings {
+ export const DEFAULT_SETTINGS: PiPluginSettings = {
+-    piBinaryPath: "/home/lemoneater/.local/bin/pi",
++    piBinaryPath: "pi",
+     workingDirectory: "",  // empty = vault root
+     defaultProvider: "",
+     defaultModel: "",

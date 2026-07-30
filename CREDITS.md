@@ -1,21 +1,22 @@
-# Credits & Sources
+# Credits and Sources
 
-This project is built on the shoulders of others. All components are open-source.
+Obsidian AI Starter integrates existing open-source projects. It does not claim ownership of them.
 
-## Core Dependencies
-
-| Project | Author | Link | What it provides |
+| Project | Maintainer | Role | Pinned version/ref |
 |---|---|---|---|
-| Pi | earendil-works | https://github.com/earendil-works/pi | Open-source AI agent CLI |
-| pi-obsidian-vault | itscool2b | https://www.npmjs.com/package/pi-obsidian-vault | Vault read/write tools for Pi |
-| obsidian-pi-plugin | sigilmakes | https://github.com/sigilmakes/obsidian-pi-plugin | Pi chat UI inside Obsidian |
-| obsidian-git-sync-skill | alexliu072903-bit | https://github.com/alexliu072903-bit/obsidian-git-sync-skill | Vault → GitHub sync |
+| [Pi](https://github.com/earendil-works/pi) | Earendil Inc. and contributors | Local coding-agent runtime | `0.82.1` |
+| [pi-obsidian-vault](https://pi.dev/packages/pi-obsidian-vault) | itscool2b | Bounded Obsidian vault tools | `0.2.3` |
+| [obsidian-pi-plugin](https://github.com/sigilmakes/obsidian-pi-plugin) | sigilmakes | Obsidian chat interface | `3ccd701160009d256528ee7794e80ee95b380a74` |
 
-## Patches & Contributions
+## Local compatibility patch
 
-**Windows `spawn EINVAL` fix** (`obsidian-pi-plugin/src/rpc.ts`)
-The original plugin used `child_process.spawn()` without `shell: true`, which fails on Windows when targeting `.cmd` files. This project adds `shell: process.platform === "win32"` to the spawn options. A PR has been submitted upstream.
+`patches/obsidian-pi-plugin-cross-platform.patch` contains two small integration fixes:
+
+- use `shell: true` only on Windows so Node.js can launch `pi.cmd`;
+- replace a machine-specific default Pi path with `pi`.
+
+The original source remains in the upstream repository. The installer fetches the pinned upstream commit and applies the patch during the local build.
 
 ## License
 
-All referenced projects use MIT or compatible licenses. This project is also MIT licensed.
+This integration repository is MIT licensed. Upstream projects retain their own copyright and license terms.
