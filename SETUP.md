@@ -1,75 +1,94 @@
-# Setup Guide
+# Setup Guide for AI Agents
 
-This file is designed to be pasted into Claude Code or Codex.
-The agent will run the automated parts and tell you exactly which manual steps remain.
+Use this file when a user pastes the repository into Claude Code, Codex, or another coding agent.
 
----
+## Objective
 
-## Instructions for the AI agent
+Install Obsidian AI Starter into one existing Obsidian Desktop vault on Windows or macOS.
 
-You are helping a user set up the Obsidian AI Starter on Windows.
+## Required input
 
-Ask the user for the following before running anything:
-1. **Vault path** — the absolute path to their Obsidian vault (e.g. `D:\ob\Obsidian Vault`)
-2. **GitHub repo URL** — an empty GitHub repo they created for vault backup (e.g. `https://github.com/username/my-vault.git`)
-3. **API key provider** — which LLM provider they're using (deepseek / openai / anthropic)
+Ask for only:
 
-Then run `scripts/setup.ps1` with the vault path:
+1. the absolute path to the Obsidian vault;
+2. whether the user wants the optional initial GitHub backup.
+
+If backup is requested, also ask for the URL of an empty private GitHub repository.
+
+Never ask the user to paste an API key into the conversation or installer.
+
+## Run the platform installer
+
+### macOS
+
+```bash
+chmod +x scripts/setup.sh
+./scripts/setup.sh --vault "/absolute/path/to/vault"
+```
+
+Optional private backup:
+
+```bash
+./scripts/setup.sh \
+  --vault "/absolute/path/to/vault" \
+  --github-url "https://github.com/username/private-vault.git" \
+  --push
+```
+
+### Windows
 
 ```powershell
-.\scripts\setup.ps1 -VaultPath "D:\ob\Obsidian Vault" -GitHubUrl "https://github.com/username/my-vault.git"
+Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\setup.ps1 -VaultPath "D:\path\to\vault"
 ```
 
-After the script completes successfully, tell the user to do the following **5 manual steps** inside Obsidian.
+Optional private backup:
 
----
-
-## Manual Steps (do these in Obsidian after the script runs)
-
-### Step 1 — Enable Community Plugins
-Obsidian → Settings → Third-party plugins → Turn off Safe mode
-
-### Step 2 — Enable Obsidian CLI
-Obsidian → Settings → General → scroll to the bottom → Advanced → CLI (Command line interface) → check Enable → click **Register for PATH**
-
-### Step 3 — Enable the Pi Plugin
-Obsidian → Settings → Third-party plugins → find **Pi** in the list → toggle it on
-
-### Step 4 — Configure Pi Plugin
-Click the gear icon next to Pi:
-- **Pi binary path**: `C:\Users\<YourUsername>\AppData\Roaming\npm\pi.cmd`
-  (Replace `<YourUsername>` with your Windows username)
-- **Working directory**: your vault path (e.g. `D:\ob\Obsidian Vault`)
-- **Default provider**: your LLM provider (e.g. `deepseek`)
-
-### Step 5 — Set your API key
-In the Pi terminal (or any terminal), run:
-```
-pi /config set-key
-```
-Follow the prompt to enter your API key.
-
----
-
-## Verify it works
-
-Open Obsidian command palette (`Ctrl+P`) → search **Pi: Open chat** → type `hi` → Pi should respond.
-
-To test vault access, ask Pi:
-```
-Read my vault and give me a summary of what's in it
+```powershell
+.\scripts\setup.ps1 `
+  -VaultPath "D:\path\to\vault" `
+  -GitHubUrl "https://github.com/username/private-vault.git" `
+  -PushToGitHub
 ```
 
----
+Do not bypass a failed prerequisite, vault validation, mismatched Git remote, non-empty remote, failed patch, failed build, or failed native command.
 
-## What the script does (automated)
+## Manual steps after installation
 
-- Installs Pi CLI globally (`@mariozechner/pi-coding-agent`)
-- Installs `pi-obsidian-vault` (gives Pi read/write access to your vault)
-- Clones `obsidian-pi-plugin`, applies the Windows compatibility patch, builds it
-- Copies the plugin files to your vault's `.obsidian/plugins/pi-plugin/` directory
-- Initializes git in your vault and connects it to your GitHub repo
+Tell the user to:
 
-## What stays manual
+1. open the vault in Obsidian Desktop;
+2. enable community plugins;
+3. enable the Pi plugin;
+4. enable Obsidian CLI and choose **Register for PATH**;
+5. run `pi` in a terminal and use `/login`;
+6. run **Pi: Open chat** from the Obsidian command palette.
 
-Obsidian's plugin system requires clicks in the UI — it cannot be automated from outside the app.
+If vault auto-detection fails:
+
+```text
+/obsidian-vault set-vault /absolute/path/to/vault
+```
+
+## Verification
+
+Ask Pi:
+
+```text
+Find my notes about <known topic> and list the relevant files.
+```
+
+Success means:
+
+- the Pi chat opens inside Obsidian;
+- the model responds;
+- the vault query returns bounded, relevant results;
+- closing or saving the conversation creates a Markdown file under `Pi-Sessions/`.
+
+## Security constraints
+
+- Pi has the permissions of the local user account; the vault working directory is not a sandbox.
+- The installer must never request or log an API key.
+- GitHub backup is opt-in and requires an explicit file preview plus confirmation.
+- The installer cannot verify repository visibility; the user must confirm the repository is private.
+- Do not weaken these checks to make an installation appear successful.
