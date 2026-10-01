@@ -288,4 +288,4 @@ Push-PrivateBackup
 
 Write-Host ""
 Write-Host "Setup complete." -ForegroundColor Green
-Write-Host "Next: open README.md or README.zh.md and finish the steps under 'Finish in Obsidian'."
+Write-Host "Next: open README.md or README.zh-CN.md and finish the steps under 'Finish in Obsidian'."

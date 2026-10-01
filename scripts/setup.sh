@@ -268,4 +268,4 @@ ok "Plugin installed in the vault"
 push_private_backup
 
 printf '\nSetup complete.\n'
-printf 'Next: open README.md or README.zh.md and finish the steps under "Finish in Obsidian".\n'
+printf 'Next: open README.md or README.zh-CN.md and finish the steps under "Finish in Obsidian".\n'
