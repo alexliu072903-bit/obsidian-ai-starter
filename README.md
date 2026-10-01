@@ -1,6 +1,6 @@
 # Obsidian AI Starter
 
-**English** | [中文](README.zh.md)
+**English** | [中文](README.zh-CN.md)
 
 A small, reproducible setup that brings the Pi coding agent into an existing Obsidian vault on Windows or macOS.
 
